@@ -208,18 +208,30 @@ def plot_est(ax, result):
     for i, (traj_est, landmark_est) in enumerate(result):
         if i == 0:
             p1 = ax.scatter(landmark_est[:, 0], landmark_est[:, 1], marker='+', lw=2, alpha=0.5)
-            alpha = 1.0
+            alpha = 1.0   
         else:
             alpha = 0.1
         (p2, ) = ax.plot(traj_est[:, 0], traj_est[:, 1], 'g-', lw=2, alpha=alpha)
     ax.set_aspect('equal')
     return p1, p2
+print('actually here')
+
+def make_sim():
+    sim = Simulator()
+    #sim.random_map(50,(-10,10,-10,10))
+    sim.make_fsg_map()
+    sim.car_path()
+    return sim
+
 
 
 if __name__ == '__main__':
+    print('here')
     import matplotlib.pyplot as plt
 
     # Design a simulator
+    sim=make_sim()
+    """
     sim = Simulator()
     sim.random_map(50, (-10, 10, -10, 10))
     pose = gtsam.Pose2(5, -5, np.pi / 2.0)
@@ -230,17 +242,19 @@ if __name__ == '__main__':
         else:
             u = 1.0, 0.0, 0.0
         pose = pose.compose(gtsam.Pose2(*u))
-
+    """
     fig, (ax1, ax2, ax3) = plt.subplots(1, 3, True, True, figsize=(8, 3))
 
     # Perfect DA
     sim.reset()
     result = slam(sim, 'perfect')
+    print(result)
     plot_sim(ax1, sim)
     plot_est(ax1, result)
     ax1.set_title('Perfect DA')
     ax1.set_xlim(-10, 10)
     ax1.set_ylim(-10, 10)
+    plt.show()
 
     # # JCBB
     sim.reset()
